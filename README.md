@@ -25,7 +25,7 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 - wget your RFC ducument
   (wget http://www.ietf.org/rfc/rfc2535.txt)
 
-- ./rfc2kindle.py -i rfc2535.txt  
+- `./rfc2kindle.py -i rfc2535.txt`  
    This will generate a rfc2535.mobi file on your temporary directory.
 
 - copy rfc2535.mobi to your kindle
