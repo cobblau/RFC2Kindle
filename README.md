@@ -32,7 +32,7 @@ RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
 ### Note
 This script works well on Linux.   
 If you run RFC2Kindle on windows platform, please do some changes yourself.  
-PS: sorry for my badly styled codes, but it works well.
+PS: sorry for my code style, but the script works well.
 
 
 
