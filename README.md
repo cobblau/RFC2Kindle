@@ -16,18 +16,22 @@ RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
 
 ### Package Required
 - ImageMagick
-- KindleGen(http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000234621)
+- KindleGen(http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000234621)  
+  you can also download KindleGen from my vdisk(http://vdisk.weibo.com/s/qjqB9BNs69eZ)
 
 ### Steps of using RFC2Kindle
 - wget your RFC ducument
   (wget http://www.ietf.org/rfc/rfc2535.txt)
 
-- ./rfc2kindle.py -i rfc2535.txt
+- ./rfc2kindle.py -i rfc2535.txt  
+   This will generate a rfc2535.mobi file on your temporary directory.
+
 - copy rfc2535.mobi to your kindle
 
 ### Note
 This script works well on Linux.   
-If you run RFC2Kindle on windows platform, please do some changes yourself.  
+If you run RFC2Kindle on windows platform, please do some changes yourself. 
+PS: sorry for my badly styled codes, but it works well.
 
 
 
