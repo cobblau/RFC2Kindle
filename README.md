@@ -20,6 +20,7 @@ RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
   you can also download KindleGen from my vdisk(http://vdisk.weibo.com/s/qjqB9BNs69eZ)
 
 ### Steps of using RFC2Kindle
+- download KindleGen and copy it to the directory where rfc2kindle.py placed
 - wget your RFC ducument
   (wget http://www.ietf.org/rfc/rfc2535.txt)
 
@@ -30,7 +31,7 @@ RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
 
 ### Note
 This script works well on Linux.   
-If you run RFC2Kindle on windows platform, please do some changes yourself. 
+If you run RFC2Kindle on windows platform, please do some changes yourself.  
 PS: sorry for my badly styled codes, but it works well.
 
 
