@@ -6,13 +6,14 @@ This project is to convert RFC into well formatted mobi files so that it can rea
 If you try to read RFC from kindle, you will find that figures are not showing correctly, no jumping from TOC, 
 texts are flowing crazy etc.
 
-So I wrote this python script based on the RFC-2-Kindle project on github(https://github.com/pingwin/RFC-2-Kindle).
+So I wrote this python script based on the RFC-2-Kindle project on github.
 
-RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
+RFC2Kindle is much better than RFC-2-Kindle on:
 * delete page breaks
 * more image elements
 * smarter title handling
 * smarter catalog handling
+* easily to run
 
 ### Package Required
 - ImageMagick
