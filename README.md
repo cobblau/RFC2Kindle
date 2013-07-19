@@ -1,7 +1,6 @@
 RFC2Kindle
 ============
 
-## Description
 This project is to convert RFC into well formatted mobi files so that it can read on Kindle.
 
 If you try to read RFC from kindle, you will find that figures are not showing correctly, no jumping from TOC, 
@@ -15,20 +14,21 @@ RFC2Kindle is much better than RFC-2-Kindle with the follow reasons:
 * smarter title handling
 * smarter catalog handling
 
-## Package Required
+### Package Required
 - ImageMagick
 - KindleGen(http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000234621)
 
-## Steps of using RFC2Kindle
+### Steps of using RFC2Kindle
 - wget your RFC ducument
-  wget http://www.ietf.org/rfc/rfc2535.txt
+  (wget http://www.ietf.org/rfc/rfc2535.txt)
 
 - ./rfc2kindle.py -i rfc2535.txt
 - copy rfc2535.mobi to your kindle
 
-## Note
-This script works well on Linux. 
-If you run RFC2Kindle on windows platform, please do some changes yourself.
+### Note
+This script works well on Linux.   
+If you run RFC2Kindle on windows platform, please do some changes yourself.  
+
 
 
 
