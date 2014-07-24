@@ -13,7 +13,7 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 * more image elements
 * smarter title handling
 * smarter catalog handling
-* easily to run
+* easier to run it.
 
 ### Package Required
 - ImageMagick
