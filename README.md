@@ -1,10 +1,9 @@
 RFC2Kindle
 ============
 
-This project is to convert RFC into well formatted mobi files so that it can read on Kindle.
+This project is created to convert RFC into well formatted mobi files so that it can read on Kindle.
 
-If you try to read RFC from kindle, you will find that figures are not showing correctly, no jumping from TOC, 
-texts are flowing crazy etc.
+If you have tried to read RFC from kindle, you might have found that figures are not showing correctly, no jumping from TOC, texts are flowing crazy etc.
 
 So I wrote this python script based on the RFC-2-Kindle project on github.
 
@@ -35,6 +34,9 @@ This script works well on Linux.
 If you run RFC2Kindle on windows platform, please do some changes yourself.  
 please email (keycobing at gmail dot com) for any improvement or any question  
 PS: sorry for my code style, but the script works well.
+
+### Author
+keycobing@gmail.com
 
 
 
