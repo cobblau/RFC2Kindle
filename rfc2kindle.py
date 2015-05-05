@@ -19,7 +19,7 @@ def usage():
     print "Convert IETF RFC TXT file to HTML for kindlegen"
     print "-h --help    This message"
     print "-i --input   input file"
-    print "-f --font    font file to use for monospace images (default:%s)" % defaultfont
+    print "-f --font    font file to use for monospace images (default:%s)" % default_font
     sys.exit(2)
 
 def find_open_file(c=0):
