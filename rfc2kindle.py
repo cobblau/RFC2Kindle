@@ -2,9 +2,13 @@
 """
 Author:Brian Smith <pingwin@gmail.com> 
        Cobbliu <keycobing@gmail.com>
-Date: 2013/07/15
+       Anand <ananth.padfoot@gmail.com>
+Date: 2016/08/23
 Description:
   Convert a IETF RFC txt format into an html document readable on the kindle.
+
+Anand:
+TODO: Rewrite to support Windows too
 """
 
 import sys, logging, getopt, os
@@ -12,7 +16,9 @@ import re
 
 default_font = '/usr/share/cups/fonts/Courier'
 font = default_font
+image_number = 0
 
+#Usage Help Printer
 def usage():
     global _defaultfont
     """ print usage message """
@@ -22,20 +28,26 @@ def usage():
     print "-f --font    font file to use for monospace images (default:%s)" % default_font
     sys.exit(2)
 
-def find_open_file(c=0):
+#Try to find a file name that's already not present in the directory.
+def find_open_file(c=1):
     try:
-        c += 1
         open('img%d.gif' % c)
     except IOError:
         return 'img%d.gif' % c
-    return find_open_file(c)
+    return find_open_file(c+1)
 
+#create image using ImageMagick
 def create_image(picture_me):
+    picture_me = "\\" + picture_me #Prepend a backslash to prevent 'convert' from removing leading spaces
+    global image_number
+    image_number +=1
+    imagetxtfile = open("%s%i.txt" % ("imagetxtfile", image_number), 'w')
+    imagetxtfile.write(picture_me)
+    imagetxtfile.close()
     global font
-    img = find_open_file()
-    os.system("convert -font %s label:'%s' %s" % \
-              (font, picture_me.replace("'", "\'"), img))
-    return img
+    img_file = find_open_file()
+    os.system("convert -font %s label:'%s' %s" %  (font, picture_me.replace("'", "\'"), img_file))
+    return img_file
 
 def is_image_part(line):
     img_chars = [
@@ -84,14 +96,14 @@ def main():
 
     input       = None
     input_name  = ""
-    middle_file = ""
+    tmp_html_file = ""
     for opt, a in opts:
         if opt in ('-h', '--help'):
             usage()
         if opt in ('-i', '--input'):
             input = a
             input_name = a
-            middle_file = "%s.html" % input_name.split(".")[0]
+            tmp_html_file = "%s.html" % input_name.split(".")[0]
         if opt in ('-f', '--font'):
             font = a
     if not input:
@@ -103,8 +115,9 @@ def main():
         print "Unable to find font: %s" % font
         usage()
 
-    input  = open(input,  'r')
-    output = open("%s" % middle_file, 'w')
+
+    input  = open(input_name,  'r')
+    output = open("%s" % tmp_html_file, 'w')
     in_p   = False
     has_title = False
     has_description = False
@@ -112,7 +125,8 @@ def main():
     in_image  = False
     pre_blank = False
     catalog    = False
-
+    lastBlankInBuffer = 0;
+    imgFooterBuf = []
     buffer = []
     buffer.append('<body>')
     for line in input:
@@ -120,13 +134,28 @@ def main():
         if is_page_break(line):
             continue;
 
-        ''' delete extra blank lines '''
+        ''' delete extra blank lines.
+        Also in case the image had a few lines (<5) of text content as part of the image,
+        it would be in imgFooterBuf. Append it. Else add it to text buffer itself '''
         if is_blank(line):
+            lastBlankInBuffer = len(buffer)-1;
+            if len(imgFooterBuf) > 0:
+                if (len(imgFooterBuf) <= 5):
+                    image_buf += imgFooterBuf;
+                    buffer.append('<img src="%s" />' % create_image(''.join(image_buf)))
+                    image_buf = imgFooterBuf = []
+                else:
+                    buffer.append(imgFooterBuf)
+
+                in_image = False
+                imgFooterBuf = []
+
             if pre_blank:
                 continue
             pre_blank = True
         else:
             pre_blank = False
+
             
         ''' handle description head '''
         if not has_description:
@@ -168,19 +197,37 @@ def main():
         if is_abstract(line):
             buffer.append("<h3>%s</h3>" % line.rstrip())
             continue
-        
-        if line[:2] == '  ':
-            if is_image_part(line):
-                ''' image '''
-                if not in_image:
-                    image = []
-                    in_image = True
-                image.append(line)
-                continue
+        ''' Sometimes, there are non-image chars that are part of the image, a few lines above and below it.
+            So, let's accomodate them into the image, if they're a max of 5 lines '''
+
+        ''' cant expect that image will always be after 2nd column;
+            some RFCs have quite huge pictures right from 2nd column. Hence, commenting this condition '''
+        #if line[:2] == '  ':
+
+        if is_image_part(line):
+            ''' image '''
+            if not in_image:
+                image_buf = []
+                isImageStart = True
+                in_image = True
+                if (len(buffer) - lastBlankInBuffer <= 5):  # (probably) no. of lines of non-pictorial info above image
+                    # remove the image head from buffer & add to image
+                    tmpBuffer = buffer[lastBlankInBuffer+1:]
+                    for i in range(len(tmpBuffer)):
+                        tmpBuffer[i] = tmpBuffer[i] + "\n"
+                    image_buf = tmpBuffer;
+                    buffer[lastBlankInBuffer+1:] = []
+
+            image_buf.append(line)
+            continue
+
+        # TODO: Get the image label if present above/below image
 
         if in_image:
-            in_image = False
-            buffer.append('<img src="%s" />' % create_image(''.join(image)))
+            if (len(imgFooterBuf) <= 5):
+                imgFooterBuf.append(line)
+            continue;
+
             
         if re.match(r'^\d+\.?\s.*', line):
             buffer.append("<h3>%s</h3>" % line.rstrip())
@@ -198,8 +245,9 @@ def main():
                 buffer.append('<p>')
                 in_p = True
             else:
-                buffer.append('</p><br />')
+                buffer.append('</p><br/>')
                 in_p = False
+            lastBlankInBuffer = len(buffer)-1
             continue
         
         buffer.append(line.replace("\n", ' '))
@@ -212,8 +260,8 @@ def main():
     output.close()
 
     ''' generate and clear intermedia '''
-    os.system("./kindlegen %s" % middle_file)
-    os.system("rm *.gif *.html")
+    os.system("./kindlegen %s" % tmp_html_file)
+    #os.system("rm *.gif *.html")
 
 if __name__ == "__main__":
     main()
