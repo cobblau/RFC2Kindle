@@ -16,7 +16,8 @@ import re
 
 default_font = '/usr/share/cups/fonts/Courier'
 font = default_font
-image_number = 0
+
+MAX_IMG_HEAD_FOOT_SIZE = 5
 
 #Usage Help Printer
 def usage():
@@ -39,26 +40,32 @@ def find_open_file(c=1):
 #create image using ImageMagick
 def create_image(picture_me):
     picture_me = "\\" + picture_me #Prepend a backslash to prevent 'convert' from removing leading spaces
-    global image_number
-    image_number +=1
-    imagetxtfile = open("%s%i.txt" % ("imagetxtfile", image_number), 'w')
+    global font
+    img_file_name = find_open_file()
+
+    # Some Debugging
+    '''
+    imagetxtfile = open("%s" % (img_file_name.replace("gif","txt")), 'w')
     imagetxtfile.write(picture_me)
     imagetxtfile.close()
-    global font
-    img_file = find_open_file()
-    os.system("convert -font %s label:'%s' %s" %  (font, picture_me.replace("'", "\'"), img_file))
-    return img_file
+    print('convert -font %s label:"%s" %s' %  (font, picture_me.replace('"', '\"'), img_file_name))
+    '''
+
+    # Escape sequence with single quote has trouble with convert. So replacing with double quotes
+    os.system('convert -font %s label:"%s" %s' %  (font, picture_me.replace('"', '\"'), img_file_name))
+    return img_file_name
 
 def is_image_part(line):
     img_chars = [
         '+-',
-        ' | ',
+        ' |',
+        '| ',
         '---',
         '0                   1',
         '0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5',
+        '0   1   2   3   4   5   6   7',
         '  /  ',
-        '1 1 1 1 1 1',
-        '1 1 1 1 1 1 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5'
+        '1 1 1 1 1 1'
         ]
     for c in img_chars:
         if line.find(c) != -1:
@@ -79,6 +86,11 @@ def is_page_break(line):
     if re.match(r'.*\[Page.*\d+?\]', line) or re.match(r'^RFC.*[1-2]\d\d\d', line):
         return True
     return False
+
+def addImageTagToBuffer(buffer, image_buf):
+    return buffer.append('<img src="%s"/>' % create_image(''.join(image_buf)))
+    # for debugging
+    #return buffer.append('<a href="%s">link here</a>' % create_image(''.join(image_buf)))
 
 def main():
     global font
@@ -125,11 +137,13 @@ def main():
     in_image  = False
     pre_blank = False
     catalog    = False
+    lineNo = 0 #not needed
     lastBlankInBuffer = 0;
     imgFooterBuf = []
     buffer = []
     buffer.append('<body>')
     for line in input:
+        lineNo += 1
         ''' delete page breakers '''
         if is_page_break(line):
             continue;
@@ -140,10 +154,11 @@ def main():
         if is_blank(line):
             lastBlankInBuffer = len(buffer)-1;
             if len(imgFooterBuf) > 0:
-                if (len(imgFooterBuf) <= 5):
+                if (len(imgFooterBuf) <= MAX_IMG_HEAD_FOOT_SIZE):
                     image_buf += imgFooterBuf;
-                    buffer.append('<img src="%s" />' % create_image(''.join(image_buf)))
-                    image_buf = imgFooterBuf = []
+                    imgFooterBuf = []
+                    addImageTagToBuffer(buffer, image_buf)
+                    image_buf = []
                 else:
                     buffer.append(imgFooterBuf)
 
@@ -165,7 +180,7 @@ def main():
             elif not pre_blank:
                 desp_image.append(line)
             else:
-                buffer.append('<img src="%s" />' % create_image(''.join(desp_image)))
+                addImageTagToBuffer(buffer, desp_image)
                 has_description = True
                 first_img_line = True
             continue
@@ -198,23 +213,25 @@ def main():
             buffer.append("<h3>%s</h3>" % line.rstrip())
             continue
         ''' Sometimes, there are non-image chars that are part of the image, a few lines above and below it.
-            So, let's accomodate them into the image, if they're a max of 5 lines '''
+            So, let's accomodate them into the image, if they're a max of 'MAX_IMG_HEAD_FOOT_SIZE' lines '''
 
         ''' cant expect that image will always be after 2nd column;
             some RFCs have quite huge pictures right from 2nd column. Hence, commenting this condition '''
         #if line[:2] == '  ':
 
+        ''' image '''
         if is_image_part(line):
-            ''' image '''
             if not in_image:
                 image_buf = []
-                isImageStart = True
                 in_image = True
-                if (len(buffer) - lastBlankInBuffer <= 5):  # (probably) no. of lines of non-pictorial info above image
-                    # remove the image head from buffer & add to image
+
+                if ((len(buffer) - lastBlankInBuffer > 0) and (len(buffer) - lastBlankInBuffer <= MAX_IMG_HEAD_FOOT_SIZE)):  # (probably) no. of lines of non-pictorial info above image
+                    # remove the image head from buffer n add to image
                     tmpBuffer = buffer[lastBlankInBuffer+1:]
+
                     for i in range(len(tmpBuffer)):
                         tmpBuffer[i] = tmpBuffer[i] + "\n"
+
                     image_buf = tmpBuffer;
                     buffer[lastBlankInBuffer+1:] = []
 
@@ -224,9 +241,13 @@ def main():
         # TODO: Get the image label if present above/below image
 
         if in_image:
-            if (len(imgFooterBuf) <= 5):
+            if (len(imgFooterBuf) <= MAX_IMG_HEAD_FOOT_SIZE) and not (is_blank(line)):
+		#if a space ensues immediately
                 imgFooterBuf.append(line)
-            continue;
+                continue
+            addImageTagToBuffer(buffer, image_buf)
+            image_buf = imgFooterBuf = []
+            in_image = False
 
             
         if re.match(r'^\d+\.?\s.*', line):
@@ -261,7 +282,7 @@ def main():
 
     ''' generate and clear intermedia '''
     os.system("./kindlegen %s" % tmp_html_file)
-    #os.system("rm *.gif *.html")
+    os.system("rm *.gif *.html")
 
 if __name__ == "__main__":
     main()
