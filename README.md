@@ -41,7 +41,7 @@ $ fc-list | grep Courier
 /usr/share/fonts/type1/texlive-fonts-recommended/pcrro8a.pfb: Courier:style=Italic
 /usr/share/fonts/type1/texlive-fonts-recommended/pcrbo8a.pfb: Courier:style=Bold Italic
 
-$ ./rfc2kindle.py -i rfc7938.txt -f /usr/share/fonts/type1/texlive-fonts-recommended/pcrr8a.pfb
+$ ./rfc2kindle.py -i rfc2535.txt -f /usr/share/fonts/type1/texlive-fonts-recommended/pcrr8a.pfb
 ```
 
 If you run RFC2Kindle on windows platform, please do some changes yourself.  
@@ -49,6 +49,7 @@ please email (keycobing at gmail dot com) for any improvement or any question
 PS: sorry for my code style, but the script works well.
 
 ### Author
+keycobing@gmail.com
 ananth.padfoot@gmail.com
 
 
