@@ -48,12 +48,14 @@ If you run RFC2Kindle on windows platform, please do some changes yourself.
 please email (keycobing at gmail dot com) for any improvement or any question  
 PS: sorry for my code style, but the script works well.
 
-### Author
-keycobing@gmail.com
-ananth.padfoot@gmail.com
+### Authors
+* keycobing@gmail.com
+* ananth.padfoot@gmail.com
 
 
 ### Forked from:
 https://github.com/cobblau/RFC2Kindle
 
 
+### GitHub URL:
+https://github.com/marauderlabs/RFC2Kindle
