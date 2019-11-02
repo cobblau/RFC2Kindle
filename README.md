@@ -19,7 +19,7 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 - KindleGen(http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000234621)  
   you can also download KindleGen from my vdisk(http://vdisk.weibo.com/s/qjqB9BNs69eZ)
 
-### Steps of using RFC2Kindle
+### Steps to use RFC2Kindle
 - download KindleGen and copy it to the directory where rfc2kindle.py placed
 - wget your RFC ducument
   (wget http://www.ietf.org/rfc/rfc2535.txt)
@@ -31,6 +31,7 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 
 ### Note
 This script works well on Linux. 
+
 
 If the default font location isn't valid on your machine, use `fc-list | grep Courier` to find the font file, and supply it with -f:
 
@@ -50,7 +51,7 @@ PS: sorry for my code style, but the script works well.
 
 ### Authors
 * keycobing@gmail.com
-* ananth.padfoot@gmail.com
+* anandakumar.u@gmail.com
 
 
 ### Forked from:
