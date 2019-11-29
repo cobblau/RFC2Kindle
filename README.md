@@ -19,7 +19,7 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 - KindleGen(http://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000234621)  
   you can also download KindleGen from my vdisk(http://vdisk.weibo.com/s/qjqB9BNs69eZ)
 
-### Steps of using RFC2Kindle
+### Steps to use RFC2Kindle
 - download KindleGen and copy it to the directory where rfc2kindle.py placed
 - wget your RFC ducument
   (wget http://www.ietf.org/rfc/rfc2535.txt)
@@ -30,28 +30,33 @@ RFC2Kindle is much better than RFC-2-Kindle on:
 - copy rfc2535.mobi to your kindle
 
 ### Note
-This script works well on Linux.   
+This script works well on Linux. 
+
 
 If the default font location isn't valid on your machine, use `fc-list | grep Courier` to find the font file, and supply it with -f:
 
 ```
 $ fc-list | grep Courier
-/usr/share/fonts/X11/Type1/c0419bt_.pfb: Courier 10 Pitch:style=Regular
-/usr/share/fonts/X11/Type1/c0611bt_.pfb: Courier 10 Pitch:style=Bold Italic
-/usr/share/fonts/X11/Type1/c0582bt_.pfb: Courier 10 Pitch:style=Italic
-/usr/share/fonts/X11/Type1/c0583bt_.pfb: Courier 10 Pitch:style=Bold
-$ ./rfc2kindle.py -i rfc2535.txt -f /usr/share/fonts/X11/Type1/c0419bt_.pfb
+/usr/share/fonts/type1/texlive-fonts-recommended/pcrb8a.pfb: Courier:style=Bold
+/usr/share/fonts/type1/texlive-fonts-recommended/pcrr8a.pfb: Courier:style=Regular
+/usr/share/fonts/type1/texlive-fonts-recommended/pcrro8a.pfb: Courier:style=Italic
+/usr/share/fonts/type1/texlive-fonts-recommended/pcrbo8a.pfb: Courier:style=Bold Italic
 
+$ ./rfc2kindle.py -i rfc2535.txt -f /usr/share/fonts/type1/texlive-fonts-recommended/pcrr8a.pfb
 ```
 
 If you run RFC2Kindle on windows platform, please do some changes yourself.  
 please email (keycobing at gmail dot com) for any improvement or any question  
 PS: sorry for my code style, but the script works well.
 
-### Author
-keycobing@gmail.com
+### Authors
+* keycobing@gmail.com
+* anandakumar.u@gmail.com
 
 
+### Forked from:
+https://github.com/cobblau/RFC2Kindle
 
 
-
+### GitHub URL:
+https://github.com/marauderlabs/RFC2Kindle
